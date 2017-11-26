@@ -1,3 +1,6 @@
+#ifndef _TYPE_TRAITS_HPP
+#define _TYPE_TRAITS_HPP
+
 namespace std
 {
     template<bool B, typename, typename F>
@@ -21,3 +24,5 @@ namespace std
     template<typename T>
     using make_unsigned_t = typename make_unsigned<T>::type;
 }
+
+#endif
