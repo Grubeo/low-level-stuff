@@ -1,7 +1,7 @@
 #ifndef _FIXED_INTS_HPP
 #define _FIXED_INTS_HPP
 
-#include <type_traits>
+#include "type_traits.hpp"
 
 namespace details
 {
