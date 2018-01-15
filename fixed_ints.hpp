@@ -42,6 +42,9 @@ namespace llstd
 	using uint16_t = utils::fixed_width_unsigned_t<16>;
 	using uint32_t = utils::fixed_width_unsigned_t<32>;
 	using uint64_t = utils::fixed_width_unsigned_t<64>;
+	
+	using size_t = decltype(sizeof(0));
+    	using ptrdiff_t = decltype(reinterpret_cast<int*>(0) - reinterpret_cast<int*>(0));
 }
 
 #endif
