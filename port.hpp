@@ -2,12 +2,12 @@
 
 template<unsigned PORTSIZE>
 struct Port {
-    std::uint16_t port;
+    llstd::uint16_t port;
     
-    explicit Port(std::uint16_t port)
+    explicit Port(llstd::uint16_t port)
         : port(port) {}
 
-    using value_type = details::fixed_width_unsigned_t<PORTSIZE>;
+    using value_type = llstd::fixed_width_unsigned_t<PORTSIZE>;
     
     void write(value_type value) {
         if constexpr (PORTSIZE == 8)
