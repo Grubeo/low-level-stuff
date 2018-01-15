@@ -35,6 +35,9 @@ namespace llstd
     template<> struct make_signed<unsigned int> : type_is<signed int> {};
     template<> struct make_signed<unsigned long> : type_is<signed long> {};
     template<> struct make_signed<unsigned long long> : type_is<signed long long> {};
+    
+    template<typename T>
+    using make_signed_t = typename make_signed<T>::type;
 }
 
 #endif
