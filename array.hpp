@@ -1,3 +1,4 @@
+#include "fixed_ints.hpp"
 #include "type_traits.hpp"
 
 namespace llstd
@@ -55,5 +56,5 @@ namespace llstd
     };
 
     template<typename ...T>
-    array(T&&...) -> array<std::common_type_t<T...>, sizeof...(T)>;
+    array(T&&...) -> array<llstd::common_type_t<T...>, sizeof...(T)>;
 }
