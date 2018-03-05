@@ -1,6 +1,8 @@
 #ifndef _TYPE_TRAITS_HPP
 #define _TYPE_TRAITS_HPP
 
+#include "fixed_ints.hpp"
+
 namespace llstd
 {
     template<typename T>
@@ -170,6 +172,15 @@ namespace llstd
 
     template<typename ...T>
     using common_type_t = typename llstd::common_type<T...>::type;
+    
+    template<llstd::size_t N, typename First, typename ...Rest>
+    struct get_n { using type = typename get_n<N-1, Rest...>::type; };
+
+    template<typename First, typename ...Rest>
+    struct get_n<0, First, Rest...> { using type = First; };
+
+    template<llstd::size_t N, typename ...T>
+    using get_n_t = typename get_n<N, T...>::type;
 }
 
 #endif
