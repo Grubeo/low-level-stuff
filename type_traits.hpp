@@ -42,7 +42,7 @@ namespace llstd
     using make_signed_t = typename make_signed<T>::type;
 
         template<typename...> struct type_or;
-    template<class T> struct type_or<T> : T { };
+    template<class T> struct type_or<T> : llstd::type_is<T> {};
     
     template<class T, class... Rest>
     struct type_or<T, Rest...> 
