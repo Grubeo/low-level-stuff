@@ -44,7 +44,7 @@ namespace llstd
 	using uint64_t = utils::fixed_width_unsigned_t<64>;
 	
 	using size_t = decltype(sizeof(0));
-    	using ptrdiff_t = decltype(reinterpret_cast<int*>(0) - reinterpret_cast<int*>(0));
+    	using ptrdiff_t = decltype(static_cast<char*>(nullptr) - static_cast<char*>(nullptr));
 }
 
 #endif
