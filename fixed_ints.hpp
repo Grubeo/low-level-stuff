@@ -1,50 +1,37 @@
-#ifndef _FIXED_INTS_HPP
-#define _FIXED_INTS_HPP
-
-#include "type_traits.hpp"
-
-namespace llstd
+template<unsigned PORTSIZE>
+struct Port 
 {
-	template<unsigned SIZE>
-	struct fixed_width_signed
-	{
-		static constexpr unsigned byte_size = SIZE / 8;
-
-		using type = llstd::type_if_t<byte_size == sizeof(signed char), char,
-			llstd::type_if_t<byte_size == sizeof(short), short,
-				llstd::type_if_t<byte_size == sizeof(int), int,
-					llstd::type_if_t<byte_size == sizeof(long), long,
-						long long
-					>
-				>
-			>
-		>;
-	};
-
-	template<unsigned SIZE>
-	using fixed_width_signed_t = typename fixed_width_signed<SIZE>::type;
-
-	template<unsigned SIZE>
-	struct fixed_width_unsigned
-	{
-		using type = std::make_unsigned_t<typename fixed_width_signed<SIZE>::type>;
-	};
-
-	template<unsigned SIZE>
-	using fixed_width_unsigned_t = typename fixed_width_unsigned<SIZE>::type;
+	using value_type = llstd::fixed_width_unsigned_t<PORTSIZE>;
+	llstd::uint16_t portNumber;
 	
-	using int8_t  = utils::fixed_width_signed_t<8>;
-	using int16_t = utils::fixed_width_signed_t<16>;
-	using int32_t = utils::fixed_width_signed_t<32>;
-	using int64_t = utils::fixed_width_signed_t<64>;
+	explicit Port(llstd::uint16_t port)
+		: portNumber(port)
+	{
+		static_assert(in_list_v<PORTSIZE, 8, 16, 32>,
+			"Intel architecture does not support not 8, 16 or 32 bits ports.");
+	}
 
-	using uint8_t  = utils::fixed_width_unsigned_t<8>;
-	using uint16_t = utils::fixed_width_unsigned_t<16>;
-	using uint32_t = utils::fixed_width_unsigned_t<32>;
-	using uint64_t = utils::fixed_width_unsigned_t<64>;
+	void write(value_type value) const noexcept
+	{
+		if constexpr (PORTSIZE == 8)
+			asm volatile ("outb %0, %1" : : "a"(value), "Nd"(portNumber));
+		else if constexpr (PORTSIZE == 16)
+			asm volatile ("outw %0, %1" : : "a"(value), "Nd"(portNumber));
+		else if constexpr (PORTSIZE == 32)
+			asm volatile ("outl %0, %1" : : "a"(value), "Nd"(portNumber));
+	}
+
+	value_type read() const noexcept
+	{
+		value_type readData;
+
+		if constexpr (PORTSIZE == 8)
+			asm volatile ("inb %1, %0" : : "=a"(readData), "Nd"(portNumber));
+		else if constexpr (PORTSIZE == 16)
+			asm volatile ("inw %1, %0" : : "=a"(readData), "Nd"(portNumber));
+		else if constexpr (PORTSIZE == 32)
+			asm volatile ("inl %1, %0" : : "a"(readData), "Nd"(portNumber));
 	
-	using size_t = decltype(sizeof(0));
-    	using ptrdiff_t = decltype(static_cast<char*>(nullptr) - static_cast<char*>(nullptr));
-}
-
-#endif
+		return readData;
+	}
+};
